@@ -1,10 +1,21 @@
 import unittest
-import DataToProcess
+import DataMatrix
 from Variable import Variable
 
 # TODO: Tests of this thing...
 class TestStatsCount(unittest.TestCase):
-    x = Variable([10., 2., 3., 4, 5], 0)
+    x = Variable([1.00,
+                  5.00,
+                  8.00,
+                  7.00,
+                  5.00,
+                  56.00,
+                  6.00,
+                  8.00,
+                  4.00,
+                  1.00], 1)
+
+    print(x)
 
     def test_mean(self):
         self.assertTrue(self.x.mean == 4.8)

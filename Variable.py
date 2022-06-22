@@ -3,14 +3,12 @@ import numpy as np
 from typing import *
 import DataType
 from Constants import Constants
-
+import pprint
 import rpy2.robjects.numpy2ri
 from rpy2.robjects.packages import importr
+
 rpy2.robjects.numpy2ri.activate()
 DescTools = importr('DescTools')
-
-
-import pprint
 
 
 def compute_skew(data, confidence_level=Constants.CONFIDENCE_LEVEL):
@@ -27,24 +25,24 @@ def compute_kurtosis(data, confidence_level=Constants.CONFIDENCE_LEVEL):
     d["Kurt"], d["Kurt_ci_lower"], d["Kurt_ci_upper"] = DescTools.Kurt(data, conf_level=confidence_level, method=2)
     return d
 
+
 # Class of descriptive statistics that are calculated from given set
 class Variable:
+    max_vals: list
     isDiscreete: bool  # is Integer
     datatype: DataType
-    mean: Union[float, None]  # arythmetic mean
-    sd: Union[float, None]  # standard deviation
-    median: Union[float, None]  # median
-    sem: Union[float, None]  # standard error of mean
-    max: Union[int, float, None]  # maximal value
-    min: Union[int, float, None]  # minimal value
-    iqr: Union[int, float, None]  # interquartile range
-    ske: Union[float, None]  # Fisher-Pearson coefficient of skewness
-    kurt: Union[float, None]  # kurtosis
-    mode: Any
+    mean: Union[float, None] = None  # arithmetic mean
+    sd: Union[float, None] = None  # standard deviation
+    median: Union[float, None] = None  # median
+    sem: Union[float, None] = None  # standard error of mean
+    max: Union[int, float, None] = None  # maximal value
+    min: Union[int, float, None] = None  # minimal value
+    iqr: Union[int, float, None] = None  # interquartile range
+    ske: Union[float, None] = None  # Fisher-Pearson coefficient of skewness
+    kurt: Union[float, None] = None  # kurtosis
+    mode: Any = None
 
     series: np.ndarray  # values
-
-
 
     def countProperties(self):
         self.series = np.sort(self.series)
@@ -58,7 +56,7 @@ class Variable:
             kurt = compute_kurtosis(self.series)
             ske = compute_skew(self.series)
             print(ske)
-            self.kurt = stats.kurtosis(self.series, fisher=True, bias=False)
+            self.kurt = stats.kurtosis(self.series, bias=False)
             self.ske = float(stats.skew(self.series, bias=False))
 
         if self.datatype <= 2:
@@ -68,7 +66,6 @@ class Variable:
             self.mode = None
             # FIXME:    Write custom mode algorithm
             #           I want to calculate continious values mode from distirbution
-
 
     def __init__(self, data: Iterable, datatype: DataType):
         for check in data, datatype:
@@ -94,18 +91,6 @@ class Variable:
     # TODO: CHECK IF DATA IS PROPER
 
     def __str__(self):
-        return pprint.pformat(x.__dict__)
+        return pprint.pformat(self.__dict__)
 
 
-x = Variable([1.00,
-              5.00,
-              8.00,
-              7.00,
-              5.00,
-              56.00,
-              6.00,
-              8.00,
-              4.00,
-              1.00], 1)
-
-print(x)
