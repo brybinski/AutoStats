@@ -7,7 +7,7 @@ class DataType(Enum):
     ORDINAL = 2
     NOMINAL = 3
     FREQUENCY = 4
-
+    DATE = 5
 
 
 
